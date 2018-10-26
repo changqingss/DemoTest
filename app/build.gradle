@@ -1,0 +1,94 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    signingConfigs {
+        debug {
+            keyAlias 'debugsignal'
+            keyPassword '123456'
+        }
+        release {
+            keyAlias 'releasesignal'
+            keyPassword '123456'
+        }
+    }
+
+    defaultConfig {
+        applicationId "demo.test.com.demotest"
+        minSdkVersion 17
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    // money  自己定义名称 xxxx
+    flavorDimensions("money", "channel")
+    //多渠道
+    productFlavors {
+        vip {
+            dimension "money"
+        }
+        xxx{
+            dimension "money"
+        }
+        xiaomi {
+            manifestPlaceholders = [CHANNEL: "xiaomi"]
+            // deimension 名称与flavorDimensions 值一致
+            dimension "channel"
+        }
+        baidu {
+            manifestPlaceholders = [CHANNEL: "baidu"]
+            dimension "channel"
+        }
+        xxx{
+            manifestPlaceholders = [CHANNEL: "xxx"]
+            dimension "channel"
+        }
+
+
+
+    }
+
+    buildTypes {
+        debug {
+//            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //signingConfig signingConfigs.release
+            //加速，apk运行速度
+            zipAlignEnabled true
+            //移除无用的resource文件
+            shrinkResources false
+            //在apk文件后边生成版本号信息
+
+        }
+        // AS 3。0前 批量打包
+//        applicationVariants.all { variant ->
+//            variant.outputs.all {
+//                outputFileName = "${variant.productFlavors[0].name}_v${defaultConfig.versionName}_${releaseTime()}.apk"
+//            }
+//        }
+        // AS 3.0后
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "${variant.productFlavors[1].name}_v${variant.versionName}_${releaseTime()}.apk"
+            }
+        }
+    }
+}
+static def releaseTime() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy-MM-dd', TimeZone.getTimeZone("UTC"))
+    return formattedDate
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
