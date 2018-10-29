@@ -1,4 +1,4 @@
-package demo.test.com.demotest;
+package com.test.com.aa;
 
 import org.junit.Test;
 

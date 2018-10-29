@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply from: 'version.gradle'
 android {
     compileSdkVersion 27
     signingConfigs {
@@ -14,11 +14,12 @@ android {
     }
 
     defaultConfig {
-        applicationId "demo.test.com.demotest"
+        applicationId "com.test"
         minSdkVersion 17
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode appVersionCode
+//        versionName getAppVersionCodeName()
+        versionName appVersionCodeName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     // money  自己定义名称 xxxx
@@ -44,9 +45,9 @@ android {
             manifestPlaceholders = [CHANNEL: "xxx"]
             dimension "channel"
         }
-
-
-
+    }
+    productFlavors.all{ flavor ->
+        manifestPlaceholders = [CHANNEL: name]
     }
 
     buildTypes {
